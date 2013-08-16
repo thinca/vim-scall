@@ -35,39 +35,41 @@ INTERFACE					*scall-interface*
 ------------------------------------------------------------------------------
 FUNCTIONS					*scall-functions*
 
-Scall({func-spec} [, {arguments}, ...])		*Scall()*
+scall#call({func-spec} [, {arguments}, ...])	*scall#call()*
 	Calls a script local function that specified by {func-spec} with
 	{arguments}.
 
 	{func-spec} takes the form like "{tail-of-filename}:{func-name}".
 >
-	Scall('plugin/foo.vim:local_func', 'string', 10)
+	scall#call('plugin/foo.vim:local_func', 'string', 10)
 	-> Calls s:local_func('string', 10) in *plugin/hoge.vim.
 <
 	".vim" of filename can be omitable.
 >
-	Scall('autoload/foo:local_func', 'string', 10)
+	scall#call('autoload/foo:local_func', 'string', 10)
 	-> Calls s:local_func('string', 10) in *autoload/hoge(.vim)?.
 <
 	Filename can be omitable.  In this case, current buffer is used.
 >
-	Scall('local_func')
+	scall#call('local_func')
 	-> Calls s:local_func() in current file.
 <
 	If {func-spec} is empty, a script local function is searched up
 	in the current buffer, and it is used.
 >
-	Scall('', arg1, arg2)
+	scall#call('', arg1, arg2)
 	-> Calls a script local function around the cursor.
 <
 	{artuments} can be contained in {func-spec}.
 >
-	Scall('plugin/hoge:local_func("string", 10)')
+	scall#call('plugin/hoge:local_func("string", 10)')
 	-> Calls s:local_func("string", 10) in *plugin/hoge(.vim)?.
 <
 	If the {tail-of-filename} matches to the two or more scripts, the
 	script of the higher position of the list of |:scriptnames| is used.
 
+Scall({func-spec} [, {arguments}, ...])		*Scall()*
+	Global function version of |scall#call()| for conveniency.
 	The name of this function can be changed by |g:scall_function_name|.
 
 
@@ -83,6 +85,9 @@ g:scall_function_name				*g:scall_function_name*
 
 ==============================================================================
 CHANGELOG					*scall-changelog*
+
+next
+	- Autoloadize.
 
 1.0	2012-12-01
 	- Initial version.
