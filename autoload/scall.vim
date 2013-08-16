@@ -24,6 +24,7 @@ function! scall#call(f, ...)
 
   if file =~# '^\d\+$'
     let nr = str2nr(file)
+    let cfunc = printf("\<SNR>%d_%s", nr, func)
   else
     let filepat = '\V' . substitute(file, '\\', '/', 'g') . '\v%(\.vim)?$'
     for s in split(slist, "\n")
