@@ -6,8 +6,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! scall#call(f, ...)
-  let [file, func] = a:f =~# ':' ?  split(a:f, ':') : [expand('%:p'), a:f]
+function! scall#call(func_spec, ...)
+  let spec = a:func_spec
+  if spec =~# '('
+    let [spec, args] = split(spec, '^.\{-}\zs\ze(')
+  endif
+  let [file, func] = spec =~# ':' ? split(spec, ':') : [expand('%:p'), spec]
 
   if func ==# ''
     let pat = '^\s*:\?\s*fu\%[nction]!\?\s*s:'
@@ -16,8 +20,6 @@ function! scall#call(f, ...)
       let func = matchstr(getline(defined_line), pat . '\zs[[:alnum:]_:#]\+')
     endif
   endif
-
-  let fname = matchstr(func, '^\w*')
 
   " Get sourced scripts.
   let slist = s:redir('scriptnames')
@@ -35,7 +37,7 @@ function! scall#call(f, ...)
       let [nr, sfile] = p[1 : 2]
       let sfile = fnamemodify(sfile, ':p:gs?\\?/?')
       if sfile =~# filepat &&
-      \    exists(printf("*\<SNR>%d_%s", nr, fname))
+      \    exists(printf("*\<SNR>%d_%s", nr, func))
         let cfunc = printf("\<SNR>%d_%s", nr, func)
         break
       endif
@@ -49,12 +51,11 @@ function! scall#call(f, ...)
     let file = fnamemodify(file, ':p')
     call s:print_error(printf(
     \    'scall: File found, but the function is not defined: %s: %s()',
-    \    file, fname))
+    \    file, func))
     return
   endif
 
-  return 0 <= match(func, '^\w*\s*(.*)\s*$')
-  \      ? eval(cfunc) : call(cfunc, a:000)
+  return exists('args') ? eval(cfunc . args) : call(cfunc, a:000)
 endfunction
 
 function! s:redir(cmd)
