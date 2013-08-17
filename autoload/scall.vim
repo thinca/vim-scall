@@ -93,13 +93,5 @@ function! s:func_name(nr, name)
   return printf("\<SNR>%d_%s", a:nr, a:name)
 endfunction
 
-function! s:print_error(message)
-  echohl ErrorMsg
-  for m in split(a:message, "\n")
-    echomsg m
-  endfor
-  echohl None
-endfunction
-
 let &cpo = s:save_cpo
 unlet s:save_cpo

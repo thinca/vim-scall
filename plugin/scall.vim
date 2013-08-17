@@ -15,8 +15,20 @@ if !exists('g:scall_function_name')
   let g:scall_function_name = 'Scall'
 endif
 
+function! s:print_error(message)
+  echohl ErrorMsg
+  for m in split(a:message, "\n")
+    echomsg m
+  endfor
+  echohl None
+endfunction
+
 function! {g:scall_function_name}(f, ...)
-  return call('scall#call', [a:f] + a:000)
+  try
+    return call('scall#call', [a:f] + a:000)
+  catch /^scall:/
+    call s:print_error(v:exception)
+  endtry
 endfunction
 
 let &cpo = s:save_cpo

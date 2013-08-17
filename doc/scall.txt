@@ -81,6 +81,8 @@ scall#search({func-spec})			*scall#search()*
 
 Scall({func-spec} [, {arguments}, ...])		*Scall()*
 	Global function version of |scall#call()| for conveniency.
+	This doesn't throw the exception that has "scall:" prefix.  Shows the
+	error message instead.
 	The name of this function can be changed by |g:scall_function_name|.
 
 
