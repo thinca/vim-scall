@@ -9,7 +9,10 @@ set cpo&vim
 function! scall#call(func_spec, ...)
   let spec = a:func_spec
   if spec =~# '('
-    let [spec, args] = split(spec, '^.\{-}\zs\ze(')
+    let [spec, args_str] = split(spec, '^.\{-}\zs\ze(')
+    let args = s:eval_args(args_str)
+  else
+    let args = a:000
   endif
   let [file, func] = spec =~# ':' ? split(spec, ':') : [expand('%:p'), spec]
 
@@ -55,7 +58,12 @@ function! scall#call(func_spec, ...)
     return
   endif
 
-  return exists('args') ? eval(cfunc . args) : call(cfunc, a:000)
+  return call(cfunc, args)
+endfunction
+
+function! s:eval_args(args)
+  let str = '[' . matchstr(a:args, '^\s*(\zs.*\ze)\s*$') . ']'
+  return eval(str)
 endfunction
 
 function! s:redir(cmd)
