@@ -1,6 +1,6 @@
 *scall.txt*	Calls a script local function readily.
 
-Version: 1.0
+Version: 1.1
 Author : thinca <thinca+vim@gmail.com>
 License: zlib License
 
@@ -99,7 +99,7 @@ g:scall_function_name				*g:scall_function_name*
 ==============================================================================
 CHANGELOG					*scall-changelog*
 
-next
+1.1	2013-08-17
 	- Autoloadize.
 	- Add |scall#search()|.
 
