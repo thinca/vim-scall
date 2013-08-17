@@ -38,32 +38,43 @@ FUNCTIONS					*scall-functions*
 scall#call({func-spec} [, {arguments}, ...])	*scall#call()*
 	Calls a script local function that specified by {func-spec} with
 	{arguments}.
-
-	{func-spec} takes the form like "{tail-of-filename}:{func-name}".
+	The function is searched by |scall#search()|.
 >
 	scall#call('plugin/foo.vim:local_func', 'string', 10)
 	-> Calls s:local_func('string', 10) in *plugin/hoge.vim.
-<
-	".vim" of filename can be omitable.
->
-	scall#call('autoload/foo:local_func', 'string', 10)
-	-> Calls s:local_func('string', 10) in *autoload/hoge(.vim)?.
-<
-	Filename can be omitable.  In this case, current buffer is used.
->
-	scall#call('local_func')
-	-> Calls s:local_func() in current file.
-<
-	If {func-spec} is empty, a script local function is searched up
-	in the current buffer, and it is used.
->
-	scall#call('', arg1, arg2)
-	-> Calls a script local function around the cursor.
 <
 	{artuments} can be contained in {func-spec}.
 >
 	scall#call('plugin/hoge:local_func("string", 10)')
 	-> Calls s:local_func("string", 10) in *plugin/hoge(.vim)?.
+<
+	Note the scope of variable.  Function local variable and script local
+	variable can not be used.
+
+scall#search({func-spec})			*scall#search()*
+	Search a script local function and returns its |Funcref|.  If the
+	function is not found, throws an exception that has "scall:" prefix.
+
+	{func-spec} takes the form like "{tail-of-filename}:{func-name}".
+>
+	scall#search('plugin/foo.vim:local_func')
+	-> Returns s:local_func() in *plugin/hoge.vim.
+<
+	".vim" of filename can be omitable.
+>
+	scall#search('autoload/foo:local_func')
+	-> Returns s:local_func() in *autoload/hoge(.vim)?.
+<
+	Filename can be omitable.  In this case, current buffer is used.
+>
+	scall#search('local_func')
+	-> Returns s:local_func() in current file.
+<
+	If {func-spec} is empty, a script local function is searched up
+	in the current buffer, and it is used.
+>
+	scall#search('')
+	-> Returns a script local function around the cursor.
 <
 	If the {tail-of-filename} matches to the two or more scripts, the
 	script of the higher position of the list of |:scriptnames| is used.
@@ -88,6 +99,7 @@ CHANGELOG					*scall-changelog*
 
 next
 	- Autoloadize.
+	- Add |scall#search()|.
 
 1.0	2012-12-01
 	- Initial version.
