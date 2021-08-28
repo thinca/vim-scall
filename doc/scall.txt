@@ -43,7 +43,7 @@ scall#call({func-spec} [, {arguments}, ...])	*scall#call()*
 	scall#call('plugin/foo.vim:local_func', 'string', 10)
 	-> Calls s:local_func('string', 10) in *plugin/hoge.vim.
 <
-	{artuments} can be contained in {func-spec}.
+	{arguments} can be contained in {func-spec}.
 >
 	scall#call('plugin/hoge:local_func("string", 10)')
 	-> Calls s:local_func("string", 10) in *plugin/hoge(.vim)?.
